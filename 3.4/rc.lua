@@ -132,13 +132,22 @@ clockicon.image  = image(confdir.."/icons/time.png")
    volicon = widget({ type = "imagebox" })
    volicon.image = image(confdir.."/icons/vol.png")
    volwidget = widget({ type = "textbox" })
-   vicious.register(volwidget, vicious.widgets.volume, " Vol: $1% ", 2, "PCM")
+   vicious.register(volwidget, vicious.widgets.volume, 
+					function(widget, args)
+						if args[2] == "♫" then --mixer is on
+							volicon.image = image(confdir.."/icons/vol.png")
+						else
+							volicon.image = image(confdir.."/icons/vol_mute.png")
+						end
+
+						return " Vol: $1% "
+					end, 2, "Master")
 
 -- Mouse-Buttons
 volicon:buttons(awful.util.table.join(
-awful.button({ }, 1, function () awful.util.spawn("amixer -q sset PCM toggle", false) end),
-awful.button({ }, 4, function () awful.util.spawn("amixer -q sset PCM 1%+",false) end),
-awful.button({ }, 5, function () awful.util.spawn("amixer -q sset PCM 1%-",false) end)))
+awful.button({ }, 1, function () awful.util.spawn("amixer -q sset Master toggle", false) end),
+awful.button({ }, 4, function () awful.util.spawn("amixer -q sset Master 1%+",false) end),
+awful.button({ }, 5, function () awful.util.spawn("amixer -q sset Master 1%-",false) end)))
 
 --
 
